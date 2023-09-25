@@ -9,5 +9,5 @@ data class AgentsDTO(
 )
 
 fun AgentsDTO.toAgent():List<Agent>{
-    return data.map { data -> Agent(data.uuid,data.displayName,data.displayIcon) }
+    return data.map { data -> Agent(data.uuid,data.displayName,data.displayIcon,data.isPlayableCharacter) }
 }

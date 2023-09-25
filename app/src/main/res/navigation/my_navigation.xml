@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_navigation"
+    app:startDestination="@id/agentFragment">
+
+    <fragment
+        android:id="@+id/agentFragment"
+        android:name="com.yusuferkamozyer.kotlinhilt.presentation.agent.view.AgentFragment"
+        android:label="fragment_agent"
+        tools:layout="@layout/fragment_agent" >
+        <action
+            android:id="@+id/action_agentFragment_to_agentDetailFragment"
+            app:destination="@id/agentDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/agentDetailFragment"
+        android:name="com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.view.AgentDetailFragment"
+        android:label="fragment_agent_detail"
+        tools:layout="@layout/fragment_agent_detail" >
+        <argument
+            android:name="agentID"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.yusuferkamozyer.kotlinhilt.presentation.favorite.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
+</navigation>

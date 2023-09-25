@@ -8,8 +8,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.internal.managers.ApplicationComponentManager
 import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
-@InstallIn(ActivityComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module
 class myModule(){
     /*@Provides
@@ -28,16 +31,16 @@ class myModule(){
         return InterfaceImplementer()
     }*/
     @Provides
-    @ActivityScoped
+    @ViewModelScoped
     fun provideRetrofit():AgentsAPI{
         return Retrofit.Builder()
             .baseUrl(BASE_VALUE).addConverterFactory(GsonConverterFactory.create())
             .build().create(AgentsAPI::class.java)
     }
-    /*@Provides
-    @ActivityScoped
+    @Provides
+    @ViewModelScoped
     fun provideRepository(api:AgentsAPI):AgentRepository{
         return AgentRepositoryImp(api)
-    }*/
+    }
 
 }

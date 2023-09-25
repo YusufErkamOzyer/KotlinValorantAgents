@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -39,6 +40,9 @@ android {
             }
         }
     }
+    buildFeatures{
+        viewBinding=true
+    }
 }
 
 dependencies {
@@ -51,8 +55,10 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt ("com.google.dagger:hilt-compiler:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
 
     val  retrofit = "2.9.0"
     implementation ("com.squareup.retrofit2:retrofit:$retrofit")
@@ -73,6 +79,11 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.3")
+
+    implementation ("de.hdodenhof:circleimageview:2.1.0")
+    // glide
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
 
 }
 kapt {
