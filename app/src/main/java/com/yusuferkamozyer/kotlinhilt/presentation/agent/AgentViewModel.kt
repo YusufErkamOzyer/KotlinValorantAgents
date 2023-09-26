@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yusuferkamozyer.kotlinhilt.repository.AgentRepository
-import com.yusuferkamozyer.kotlinhilt.repository.AgentRepositoryImp
+import com.yusuferkamozyer.kotlinhilt.data.remote.repository.AgentRepository
+import com.yusuferkamozyer.kotlinhilt.data.remote.repository.AgentRepositoryImp
 import com.yusuferkamozyer.kotlinvalorant.domain.model.Agent
 import com.yusuferkamozyer.kotlinvalorant.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

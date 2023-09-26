@@ -1,4 +1,4 @@
-package com.yusuferkamozyer.kotlinhilt
+package com.yusuferkamozyer.kotlinhilt.data.remote
 
 import com.yusuferkamozyer.kotlinvalorant.data.remote.dto.agentsdetaildto.AgentsDetailDTO
 import com.yusuferkamozyer.kotlinvalorant.data.remote.dto.agentsdto.AgentsDTO

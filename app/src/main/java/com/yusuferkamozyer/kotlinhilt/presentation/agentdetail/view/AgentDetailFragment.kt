@@ -1,41 +1,31 @@
 package com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.view
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.yusuferkamozyer.kotlinhilt.AgentsAPI
 import com.yusuferkamozyer.kotlinhilt.R
-import com.yusuferkamozyer.kotlinhilt.databinding.FragmentAgentBinding
+import com.yusuferkamozyer.kotlinhilt.data.local.model.AgentDatabase
 import com.yusuferkamozyer.kotlinhilt.databinding.FragmentAgentDetailBinding
 import com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.AgentDetailViewModel
 import com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.ViewItem
 import com.yusuferkamozyer.kotlinhilt.util.downloadImage
 import com.yusuferkamozyer.kotlinhilt.util.placeHolderProgressBar
 import com.yusuferkamozyer.kotlinvalorant.domain.model.AgentDetail
-import com.yusuferkamozyer.kotlinvalorant.util.Constants.BASE_VALUE
 import com.yusuferkamozyer.kotlinvalorant.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Random
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AgentDetailFragment @Inject constructor(): Fragment() {
     private var _binding: FragmentAgentDetailBinding? = null
     private val binding get() = _binding!!
+    private lateinit var agentDetail: AgentDetail
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -50,10 +40,36 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
     }
     val viewModel:AgentDetailViewModel by viewModels()
     val args:AgentDetailFragmentArgs by navArgs()
+    private var isContained:Boolean=false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val agentuuid=args.agentID
         viewModel.getAgentDetail(agentuuid)
+        try {
+            binding.addMyFav.setOnClickListener {
+                val currentAgentDatabase=AgentDatabase(agentDetail.displayName,agentDetail.uuid,agentDetail.displayIcon)
+                if (isContained){
+                    viewModel.removeFav(currentAgentDatabase)
+                    binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_border_24)
+                    isContained=false
+                }
+                else{
+                    viewModel.addFavs(currentAgentDatabase)
+                    binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_24)
+                    isContained=true
+                }
+
+
+            }
+
+        }catch (e:Exception){
+            println(e.localizedMessage)
+        }
+
+
+
+
+
 
         observeLiveData()
     }
@@ -61,8 +77,13 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
         viewModel.state.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Success->{
-                    it.data?.let {agentDetail ->
+                    it.data?.let {agentDetail1 ->
+                        agentDetail=agentDetail1
                         loadData(agentDetail)
+                        isContained=viewModel.isContain(agentDetail)
+                        if (isContained){
+                            binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_24)
+                        }
                     }
 
                     binding.progressBarDetail.visibility=View.GONE
@@ -76,10 +97,11 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
                     binding.errorView.visibility=View.VISIBLE
                     binding.progressBarDetail.visibility=View.GONE
                 }
+                else -> {
+                    println("else state")
+                }
             }
         })
-
-
     }
     fun loadData(agentDetail: AgentDetail){
         binding.imageBackground.downloadImage(agentDetail.fullPortrait, placeHolderProgressBar(requireContext()))

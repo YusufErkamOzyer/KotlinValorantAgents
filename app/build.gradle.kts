@@ -80,6 +80,12 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.3")
 
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+
     implementation ("de.hdodenhof:circleimageview:2.1.0")
     // glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")

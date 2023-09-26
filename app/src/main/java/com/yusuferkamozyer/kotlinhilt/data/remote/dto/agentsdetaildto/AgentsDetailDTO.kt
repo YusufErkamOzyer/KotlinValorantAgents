@@ -8,5 +8,5 @@ data class AgentsDetailDTO(
 )
 
 fun AgentsDetailDTO.toAgentDetail():AgentDetail{
-    return AgentDetail(data.displayName,data.uuid,data.description,data.abilities,data.background,data.fullPortrait,data.role,data.backgroundGradientColors)
+    return AgentDetail(data.displayName,data.uuid,data.description,data.abilities,data.fullPortrait,data.role,data.displayIcon,data.backgroundGradientColors)
 }

@@ -1,8 +1,9 @@
-package com.yusuferkamozyer.kotlinhilt.repository
+package com.yusuferkamozyer.kotlinhilt.data.remote.repository
 
-import com.yusuferkamozyer.kotlinhilt.AgentsAPI
+import com.yusuferkamozyer.kotlinhilt.data.local.AgentDetailDao
+import com.yusuferkamozyer.kotlinhilt.data.local.model.AgentDatabase
+import com.yusuferkamozyer.kotlinhilt.data.remote.AgentsAPI
 import com.yusuferkamozyer.kotlinvalorant.data.remote.dto.agentsdetaildto.toAgentDetail
-import com.yusuferkamozyer.kotlinvalorant.data.remote.dto.agentsdto.AgentsDTO
 import com.yusuferkamozyer.kotlinvalorant.data.remote.dto.agentsdto.toAgent
 import com.yusuferkamozyer.kotlinvalorant.domain.model.Agent
 import com.yusuferkamozyer.kotlinvalorant.domain.model.AgentDetail
@@ -12,11 +13,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOError
 import javax.inject.Inject
 
-class AgentRepositoryImp @Inject constructor(private val api:AgentsAPI):AgentRepository {
+class AgentRepositoryImp @Inject constructor(private val api: AgentsAPI,private val dao: AgentDetailDao): AgentRepository {
      override suspend fun getAgent(): Flow<Resource<List<Agent>>> = flow {
         try {
             emit(Resource.Loading())
@@ -46,8 +46,21 @@ class AgentRepositoryImp @Inject constructor(private val api:AgentsAPI):AgentRep
 
     }.flowOn(Dispatchers.IO)
 
+    override fun saveAgentDetail(agentDatabase: AgentDatabase) {
+        dao.insertAgentDetail(agentDatabase)
+    }
 
+    override fun deleteAgentDetail(uuid:String) {
+        dao.deleteAgentDetail(uuid)
+    }
 
+    override fun getMyFavAgents(): List<AgentDatabase> {
+        return dao.getAll()
+    }
+
+    override fun deleteAll() {
+        dao.deleteAll()
+    }
 
 
 }
