@@ -12,20 +12,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.yusuferkamozyer.kotlinhilt.MainActivity
 import com.yusuferkamozyer.kotlinhilt.R
 import com.yusuferkamozyer.kotlinhilt.databinding.FragmentAgentBinding
 import com.yusuferkamozyer.kotlinhilt.presentation.agent.AgentViewModel
 import com.yusuferkamozyer.kotlinhilt.presentation.agent.adapter.AgentsAdapter
 import com.yusuferkamozyer.kotlinhilt.util.afterTextChanged
+import com.yusuferkamozyer.kotlinhilt.util.upperExtensions
 import com.yusuferkamozyer.kotlinvalorant.domain.model.Agent
 import com.yusuferkamozyer.kotlinvalorant.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Error
 import java.util.ArrayList
 import javax.inject.Inject
 @AndroidEntryPoint
 class AgentFragment @Inject constructor() : Fragment() {
+    private var activity:MainActivity?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity=activity
 
     }
     private lateinit var agentList: ArrayList<Agent>
@@ -40,7 +45,7 @@ class AgentFragment @Inject constructor() : Fragment() {
         return view
     }
 
-    val viewModel:AgentViewModel by viewModels()
+    private val viewModel:AgentViewModel by viewModels()
     private  var myAdapter: AgentsAdapter= AgentsAdapter(arrayListOf())
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +54,7 @@ class AgentFragment @Inject constructor() : Fragment() {
         binding.agentRecyclerView.layoutManager=GridLayoutManager(context,3)
         binding.agentRecyclerView.adapter=myAdapter
         binding.searchBar.afterTextChanged {
-            var string=it.capitalize()
+            var string=it.upperExtensions()
             myList.clear()
             println(string.length)
             try {
@@ -70,7 +75,7 @@ class AgentFragment @Inject constructor() : Fragment() {
 
         observeLiveData()
     }
-    fun observeLiveData(){
+    private fun observeLiveData(){
         viewModel.agents.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Success->{
@@ -105,6 +110,7 @@ class AgentFragment @Inject constructor() : Fragment() {
             }
 
         })
+
     }
     override fun onDestroyView() {
         super.onDestroyView()

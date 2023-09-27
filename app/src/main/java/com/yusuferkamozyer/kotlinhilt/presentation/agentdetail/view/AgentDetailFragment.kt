@@ -8,12 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.yusuferkamozyer.kotlinhilt.MainActivity
 import com.yusuferkamozyer.kotlinhilt.R
 import com.yusuferkamozyer.kotlinhilt.data.local.model.AgentDatabase
 import com.yusuferkamozyer.kotlinhilt.databinding.FragmentAgentDetailBinding
 import com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.AgentDetailViewModel
-import com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.ViewItem
+import com.yusuferkamozyer.kotlinhilt.presentation.agentdetail.adapter.AgentDetailAdapter
+import com.yusuferkamozyer.kotlinhilt.presentation.model.ViewItem
 import com.yusuferkamozyer.kotlinhilt.util.downloadImage
 import com.yusuferkamozyer.kotlinhilt.util.placeHolderProgressBar
 import com.yusuferkamozyer.kotlinvalorant.domain.model.AgentDetail
@@ -26,8 +30,13 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
     private var _binding: FragmentAgentDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var agentDetail: AgentDetail
+    private val viewModel:AgentDetailViewModel by viewModels()
+    private val args:AgentDetailFragmentArgs by navArgs()
+    private lateinit var  agentDetailAdapter:AgentDetailAdapter
+    private var activity: MainActivity?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity=activity
     }
 
     override fun onCreateView(
@@ -38,42 +47,18 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
         val view = binding.root
         return view
     }
-    val viewModel:AgentDetailViewModel by viewModels()
-    val args:AgentDetailFragmentArgs by navArgs()
+
     private var isContained:Boolean=false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val agentuuid=args.agentID
         viewModel.getAgentDetail(agentuuid)
-        try {
-            binding.addMyFav.setOnClickListener {
-                val currentAgentDatabase=AgentDatabase(agentDetail.displayName,agentDetail.uuid,agentDetail.displayIcon)
-                if (isContained){
-                    viewModel.removeFav(currentAgentDatabase)
-                    binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_border_24)
-                    isContained=false
-                }
-                else{
-                    viewModel.addFavs(currentAgentDatabase)
-                    binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_24)
-                    isContained=true
-                }
-
-
-            }
-
-        }catch (e:Exception){
-            println(e.localizedMessage)
+        binding.addMyFav.setOnClickListener {
+            addFavoriteOrDelete()
         }
-
-
-
-
-
-
         observeLiveData()
     }
-    fun observeLiveData(){
+    private fun observeLiveData(){
         viewModel.state.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Success->{
@@ -97,13 +82,11 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
                     binding.errorView.visibility=View.VISIBLE
                     binding.progressBarDetail.visibility=View.GONE
                 }
-                else -> {
-                    println("else state")
-                }
+
             }
         })
     }
-    fun loadData(agentDetail: AgentDetail){
+    private fun loadData(agentDetail: AgentDetail){
         binding.imageBackground.downloadImage(agentDetail.fullPortrait, placeHolderProgressBar(requireContext()))
         binding.agentName.text=agentDetail.displayName
         binding.agentDesc.text=agentDetail.description
@@ -113,20 +96,32 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
         binding.imageRole.downloadImage(agentDetail.role.displayIcon,placeHolderProgressBar(requireContext()))
         binding.roleName.text=agentDetail.role.displayName
         binding.roleDesc.text=agentDetail.role.description
+        val abilityList= arrayListOf<ViewItem>()
+        for(i in agentDetail.abilities){
+            val ability= ViewItem(i.displayIcon,i.displayName,i.description)
+            abilityList.add(ability)
+        }
+        agentDetailAdapter=AgentDetailAdapter(abilityList)
+        binding.detailRecyclerView.layoutManager=LinearLayoutManager(requireContext())
+        binding.detailRecyclerView.adapter=agentDetailAdapter
 
-        val firstViewItem=ViewItem(binding.ability1View,binding.ability1Name,binding.ability1Desc)
-        val secondViewItem=ViewItem(binding.ability2View,binding.ability2Name,binding.ability2Desc)
-        val thirdViewItem=ViewItem(binding.ability3View,binding.ability3Name,binding.ability3Desc)
-        val fourthViewItem=ViewItem(binding.ability4View,binding.ability4Name,binding.ability4Desc)
-        val itemViewList= arrayListOf(firstViewItem,secondViewItem,thirdViewItem,fourthViewItem)
 
-        for ((index,itemView) in itemViewList.withIndex()){
-            itemView.imageView.downloadImage(agentDetail.abilities.get(index).displayIcon,placeHolderProgressBar(requireContext()))
-            itemView.abilityName.text=agentDetail.abilities.get(index).displayName
-            itemView.abilityDesc.text=agentDetail.abilities.get(index).description
+    }
+
+    private fun addFavoriteOrDelete(){
+        val currentAgentDatabase=AgentDatabase(agentDetail.displayName,agentDetail.uuid,agentDetail.displayIcon)
+        if (isContained){
+            viewModel.removeFav(currentAgentDatabase)
+            binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_border_24)
+            isContained=false
+        }
+        else{
+            viewModel.addFavs(currentAgentDatabase)
+            binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_24)
+            isContained=true
         }
     }
-    fun generateRondomList():ArrayList<Int>{
+    private fun generateRondomList():ArrayList<Int>{
         val arrayList= arrayListOf<Int>()
         while (true){
             if (arrayList.size==4){
@@ -139,6 +134,13 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
         }
         return arrayList
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding=null
+
+    }
+
 
 
 

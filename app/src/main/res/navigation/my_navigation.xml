@@ -23,10 +23,17 @@
             android:name="agentID"
             app:argType="string"
             android:defaultValue='""' />
+        <action
+            android:id="@+id/action_agentDetailFragment_to_agentFragment"
+            app:destination="@id/agentFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.yusuferkamozyer.kotlinhilt.presentation.favorite.FavoriteFragment"
+        android:name="com.yusuferkamozyer.kotlinhilt.presentation.favorite.view.FavoriteFragment"
         android:label="fragment_favorite"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favoriteFragment_to_agentDetailFragment"
+            app:destination="@id/agentDetailFragment" />
+    </fragment>
 </navigation>

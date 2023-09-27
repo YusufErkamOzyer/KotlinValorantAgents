@@ -13,7 +13,7 @@ import com.yusuferkamozyer.kotlinhilt.util.downloadImage
 import com.yusuferkamozyer.kotlinhilt.util.placeHolderProgressBar
 import com.yusuferkamozyer.kotlinvalorant.domain.model.Agent
 
-class AgentsAdapter(val agentsList: ArrayList<Agent>): RecyclerView.Adapter<AgentsAdapter.AgentsHolder>() {
+class AgentsAdapter(private val agentsList: ArrayList<Agent>): RecyclerView.Adapter<AgentsAdapter.AgentsHolder>() {
     class AgentsHolder(val binding: RecyclerRowBinding): RecyclerView.ViewHolder(binding.root) {
 
     }

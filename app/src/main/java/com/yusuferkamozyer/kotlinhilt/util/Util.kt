@@ -48,3 +48,18 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         }
     })
 }
+fun String.upperExtensions():String{
+    return if (this.isEmpty()){
+        this
+    }
+    else{
+        var myString= this[0].uppercase()
+        for (i in 1..<this.length)
+        {
+            myString += this[i]
+        }
+        myString
+    }
+
+
+}

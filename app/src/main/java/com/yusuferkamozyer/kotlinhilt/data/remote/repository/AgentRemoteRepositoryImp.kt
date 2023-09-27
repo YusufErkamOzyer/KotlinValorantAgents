@@ -16,7 +16,8 @@ import retrofit2.HttpException
 import java.io.IOError
 import javax.inject.Inject
 
-class AgentRepositoryImp @Inject constructor(private val api: AgentsAPI,private val dao: AgentDetailDao): AgentRepository {
+class AgentRemoteRepositoryImp @Inject constructor(private val api: AgentsAPI):
+    AgentRemoteRepository {
      override suspend fun getAgent(): Flow<Resource<List<Agent>>> = flow {
         try {
             emit(Resource.Loading())
@@ -46,21 +47,6 @@ class AgentRepositoryImp @Inject constructor(private val api: AgentsAPI,private 
 
     }.flowOn(Dispatchers.IO)
 
-    override fun saveAgentDetail(agentDatabase: AgentDatabase) {
-        dao.insertAgentDetail(agentDatabase)
-    }
-
-    override fun deleteAgentDetail(uuid:String) {
-        dao.deleteAgentDetail(uuid)
-    }
-
-    override fun getMyFavAgents(): List<AgentDatabase> {
-        return dao.getAll()
-    }
-
-    override fun deleteAll() {
-        dao.deleteAll()
-    }
 
 
 }

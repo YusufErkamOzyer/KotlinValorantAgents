@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import com.yusuferkamozyer.kotlinhilt.data.local.AgentFavDatabase
 import com.yusuferkamozyer.kotlinhilt.data.local.AgentDetailDao
+import com.yusuferkamozyer.kotlinhilt.data.local.repository.AgentLocalRepository
+import com.yusuferkamozyer.kotlinhilt.data.local.repository.AgentLocalRepositoryImp
 import com.yusuferkamozyer.kotlinhilt.data.remote.AgentsAPI
-import com.yusuferkamozyer.kotlinhilt.data.remote.repository.AgentRepository
-import com.yusuferkamozyer.kotlinhilt.data.remote.repository.AgentRepositoryImp
+import com.yusuferkamozyer.kotlinhilt.data.remote.repository.AgentRemoteRepository
+import com.yusuferkamozyer.kotlinhilt.data.remote.repository.AgentRemoteRepositoryImp
 import com.yusuferkamozyer.kotlinvalorant.util.Constants.BASE_VALUE
 import dagger.Module
 import dagger.Provides
@@ -46,9 +48,13 @@ class myModule(){
     }
     @Provides
     @ViewModelScoped
-    fun provideRepository(api: AgentsAPI,dao: AgentDetailDao): AgentRepository {
-        return AgentRepositoryImp(api,dao)
+    fun provideRepository(api: AgentsAPI): AgentRemoteRepository {
+        return AgentRemoteRepositoryImp(api)
     }
-
+    @Provides
+    @ViewModelScoped
+    fun provideLocalRepository(dao: AgentDetailDao): AgentLocalRepository {
+        return AgentLocalRepositoryImp(dao)
+    }
 
 }
