@@ -8,6 +8,13 @@
         android:title="Home"
         android:icon="@drawable/baseline_home_24"/>
     <item
+        android:id="@+id/agentDetailFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Home"
+        android:icon="@drawable/baseline_unfold_more_24"
+        android:visible="false"/>
+    <item
         android:id="@+id/favoriteFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

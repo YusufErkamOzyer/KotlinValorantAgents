@@ -22,13 +22,24 @@ class AgentRemoteRepositoryImp @Inject constructor(private val api: AgentsAPI):
         try {
             emit(Resource.Loading())
             val response=api.getAgent()
-            emit(Resource.Success(data =response.body()?.toAgent() ?: emptyList() ))
+            val agentList= arrayListOf<Agent>()
+            response.body()?.let { agentsDto ->
+                agentsDto.toAgent().forEach{
+                    if (it.isPlayableCharacter){
+                        agentList.add(it)
+                    }
+                    else{
+                        println(it.uuid)
+                    }
+                }
+            }
+            emit(Resource.Success(data =agentList.toList()))
         }catch (e:Exception){
             emit(Resource.Error(e.localizedMessage?:"Error!"))
         } catch (e: HttpException) {
             emit(Resource.Error(message = e.localizedMessage ?: "Error!"))
         } catch (e: IOError) {
-            emit(Resource.Error(message = "Could not reach internet"))
+            emit(Resource.Error(message = e.localizedMessage?:"Could not reach the internet"))
         }
     }.flowOn(Dispatchers.IO)
 

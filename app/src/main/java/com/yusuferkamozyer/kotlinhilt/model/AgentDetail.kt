@@ -15,6 +15,5 @@ class AgentDetail(
     val role: Role,
     val displayIcon: String,
     val backgroundGradientColors: List<String>
-
     ) {
 }

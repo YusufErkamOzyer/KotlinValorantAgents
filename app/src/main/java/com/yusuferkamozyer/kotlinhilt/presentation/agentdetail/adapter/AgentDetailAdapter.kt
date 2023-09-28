@@ -24,8 +24,25 @@ class AgentDetailAdapter(private val arrayList: ArrayList<ViewItem>): RecyclerVi
     }
 
     override fun onBindViewHolder(holder: AgentDetailHolder, position: Int) {
+        var rate=arrayList[position].abilityDesc.length*4/10
+        var counter=0
         holder.binding.abilityView.downloadImage(arrayList[position].url, placeHolderProgressBar(holder.itemView.context))
         holder.binding.abilityName.text=arrayList[position].abilityName
-        holder.binding.abilityDesc.text=arrayList[position].abilityDesc
+        holder.binding.abilityDesc.text=arrayList[position].abilityDesc.substring(0,rate)+".."
+        holder.binding.moreLess.setOnClickListener {
+            if (counter%2==1){
+                holder.binding.abilityDesc.text=arrayList[position].abilityDesc.substring(0,rate)+".."
+                holder.binding.moreLess.text="more"
+                counter += 1
+            }else{
+                holder.binding.abilityDesc.text=arrayList[position].abilityDesc
+                holder.binding.moreLess.text="less"
+                counter += 1
+
+            }
+
+        }
+
+
     }
 }

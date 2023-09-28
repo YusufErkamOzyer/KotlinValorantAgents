@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_agent" >
         <action
             android:id="@+id/action_agentFragment_to_agentDetailFragment"
-            app:destination="@id/agentDetailFragment" />
+            app:destination="@id/agentDetailFragment"
+            app:popUpTo="@id/agentFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/agentDetailFragment"
@@ -34,6 +36,8 @@
         tools:layout="@layout/fragment_favorite" >
         <action
             android:id="@+id/action_favoriteFragment_to_agentDetailFragment"
-            app:destination="@id/agentDetailFragment" />
+            app:destination="@id/agentDetailFragment"
+            app:popUpTo="@id/favoriteFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

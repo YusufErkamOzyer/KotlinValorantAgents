@@ -38,5 +38,7 @@ class FavoriteAdapter(private val myList: List<AgentDatabase>) :
             val action=FavoriteFragmentDirections.actionFavoriteFragmentToAgentDetailFragment(myList.get(position).uuid)
             Navigation.findNavController(it).navigate(action)
         }
+
+
     }
 }

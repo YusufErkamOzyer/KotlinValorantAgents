@@ -52,11 +52,19 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val agentuuid=args.agentID
-        viewModel.getAgentDetail(agentuuid)
-        binding.addMyFav.setOnClickListener {
-            addFavoriteOrDelete()
+        println(agentuuid)
+
+        try {
+            viewModel.getAgentDetail(agentuuid)
+            binding.addMyFav.setOnClickListener {
+                addFavoriteOrDelete()
+            }
+            observeLiveData()
         }
-        observeLiveData()
+        catch (e:Exception){
+            println(e.localizedMessage)
+        }
+
     }
     private fun observeLiveData(){
         viewModel.state.observe(viewLifecycleOwner, Observer {
@@ -70,7 +78,6 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
                             binding.addMyFav.setBackgroundResource(R.drawable.baseline_favorite_24)
                         }
                     }
-
                     binding.progressBarDetail.visibility=View.GONE
                 }
                 is Resource.Loading->{
@@ -86,6 +93,7 @@ class AgentDetailFragment @Inject constructor(): Fragment() {
             }
         })
     }
+
     private fun loadData(agentDetail: AgentDetail){
         binding.imageBackground.downloadImage(agentDetail.fullPortrait, placeHolderProgressBar(requireContext()))
         binding.agentName.text=agentDetail.displayName

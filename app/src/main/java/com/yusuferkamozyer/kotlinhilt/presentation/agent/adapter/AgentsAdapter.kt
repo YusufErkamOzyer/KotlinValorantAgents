@@ -37,6 +37,7 @@ class AgentsAdapter(private val agentsList: ArrayList<Agent>): RecyclerView.Adap
             println(agentsList.get(position).displayName)
             val action=AgentFragmentDirections.actionAgentFragmentToAgentDetailFragment(agentID = agentsList.get(position).uuid)
             Navigation.findNavController(it).navigate(action)
+
         }
     }
     fun uptade(newAgentList: List<Agent>){

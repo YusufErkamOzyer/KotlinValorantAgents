@@ -46,7 +46,7 @@ class FavoriteFragment : Fragment() {
     private fun getData(){
         val myFavAgents=viewModel.getMyFavoriteAgents()
         println(myFavAgents)
-        val favoriteAdapter=FavoriteAdapter(myFavAgents)
+        favoriteAdapter=FavoriteAdapter(myFavAgents)
         binding.recyclerViewFavorites.layoutManager=GridLayoutManager(requireContext(),3)
         binding.recyclerViewFavorites.adapter=favoriteAdapter
     }
